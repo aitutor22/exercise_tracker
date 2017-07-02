@@ -1,9 +1,17 @@
 from django.contrib import admin
-from .models import Profile, ExerciseSet
+from .models import Profile, Workout, ExerciseSet
 
+from . import forms
 
-class ExerciseSetAdmin(admin.ModelAdmin):
-	list_display = ('profile', 'repetitions', 'exercise_type', 'created')
+class ExerciseSetInline(admin.TabularInline):
+    model = ExerciseSet
+
+class WorkoutAdmin(admin.ModelAdmin):
+    list_display = ('profile', 'created')
+    inlines = [
+        ExerciseSetInline
+    ]
 
 admin.site.register(Profile)
-admin.site.register(ExerciseSet, ExerciseSetAdmin)
+admin.site.register(Workout, WorkoutAdmin)
+admin.site.register(ExerciseSet)

@@ -1,0 +1,20 @@
+{% extends 'pushup/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="page-header">
+        <h1>Add New Exercise Set</h1>
+      </div>
+      
+      <form action="/exercise_set/add/" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Save" />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

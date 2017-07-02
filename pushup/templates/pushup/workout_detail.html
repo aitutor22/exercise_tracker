@@ -1,0 +1,17 @@
+{% extends 'pushup/layout.html' %}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+{% block content %}
+  <h1>Workout</h1>
+    <div>
+      <h3>{{ object.created|date }}</h3>
+      <ul>
+        {% for exercise_set in object.exercise_sets.all %}
+          <li>{{ exercise_set }}</li>
+        {% endfor %}        
+      </ul>      
+    </div>  
+{% endblock %}
