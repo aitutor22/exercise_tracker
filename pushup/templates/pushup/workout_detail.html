@@ -8,6 +8,9 @@
   <h1>Workout</h1>
     <div>
       <h3>{{ object.created|date }}</h3>
+      <p>
+        <a href="{% url 'pushup:workout-update' pk=object.id %}">Edit</a>
+      </p>
       <ul>
         {% for exercise_set in object.exercise_sets.all %}
           <li>{{ exercise_set }}</li>

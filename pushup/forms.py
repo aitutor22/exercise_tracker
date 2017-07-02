@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, inlineformset_factory, BaseInlineFormSet
+from django.forms import ModelForm, inlineformset_factory
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
@@ -24,12 +24,4 @@ class ExerciseSetForm(ModelForm):
         model = ExerciseSet
         exclude = ()
 
-class CustomExerciseSetInlineFormSet(BaseInlineFormSet):
-    def clean(self):
-        cleaned_data = super().clean()
-        print('custom')
-        print(cleaned_data)
-
-
-ExerciseSetFormSet = inlineformset_factory(Workout, ExerciseSet, form=ExerciseSetForm, 
-    formset=CustomExerciseSetInlineFormSet, extra=3)
+ExerciseSetFormSet = inlineformset_factory(Workout, ExerciseSet, form=ExerciseSetForm, extra=3)

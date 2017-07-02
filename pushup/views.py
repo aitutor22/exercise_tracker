@@ -37,10 +37,10 @@ class WorkoutDetailView(DetailView):
 class WorkoutCreate(CreateView):
     model = Workout
     fields = ['profile', 'created']
+    template_name = 'pushup/workout_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        template_name = 'pushup/workout_form.html'
 
         context['workout_form'] = WorkoutForm()
         context['exercise_set_form'] = ExerciseSetFormSet()
@@ -72,6 +72,43 @@ class WorkoutCreate(CreateView):
                 return HttpResponseRedirect(reverse_lazy('pushup:workout-detail', kwargs={'pk': workout.pk}))
         else:
             raise Http404 
+
+class WorkoutUpdate(UpdateView):
+    model = Workout
+    fields = ['profile', 'created']
+    template_name = 'pushup/workout_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['workout_form'] = WorkoutForm(instance=self.object)
+        context['exercise_set_form'] = ExerciseSetFormSet(instance=self.object)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        workout_form = WorkoutForm(request.POST, instance=self.get_object())
+        formset = ExerciseSetFormSet(request.POST, instance=self.get_object())
+
+        if workout_form.is_valid() and formset.is_valid():
+            with transaction.atomic():
+                workouts_saved = 0
+                workout = workout_form.save()
+                           
+                for exercise_set_form in formset:
+                    exercise_set = exercise_set_form.save(commit=False)
+
+                    if exercise_set.repetitions == None or exercise_set.exercise_type == None:
+                        continue
+
+                    exercise_set.workout = workout
+                    exercise_set.save()
+                    workouts_saved += 1
+
+                if workouts_saved == 0:
+                    raise ValidationError('No workouts are valid')
+
+                return HttpResponseRedirect(reverse_lazy('pushup:workout-detail', kwargs={'pk': workout.pk}))
+        else:
+            raise Http404     
 
 class ExerciseSetCreate(CreateView):
     model = ExerciseSet

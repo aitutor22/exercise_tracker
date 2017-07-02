@@ -7,7 +7,7 @@
 {% block content %}
   {% for workout in object_list %}
     <div>
-      <h3>{{ workout.created }}</h3>
+      <h3><a href="{% url 'pushup:workout-detail' workout.id %}">{{ workout.created }}</a></h3>
       <ul>
         {% for exercise_set in workout.exercise_sets.all %}
           <li>{{ exercise_set }}</li>
